@@ -1,0 +1,42 @@
+@use '../../sass/_variable'
+
+.client
+    position: relative
+
+    .status
+        position: absolute
+        top: 5px
+        right: 5px
+        z-index: 9
+        width: 13px
+        height: 13px
+        border-radius: 50%
+        background-color: variable.$green
+    .content
+        margin: 0 auto
+        width: 100%
+        text-align: start
+        display: flex
+        line-height: 25px
+        align-items: center
+        justify-content: space-between
+        border-radius: 10px
+        box-shadow: 0 0 0
+        
+        .client-data
+            p
+                font-size: 17px
+
+        .actions
+            display: flex
+            gap: 5px
+            flex-direction: column
+            .icon
+                border: none
+                background-color: transparent
+
+
+.green
+    background-color: variable.$green
+.red
+    background-color: variable.$redStatus

@@ -1,0 +1,8 @@
+$blue: #74C0FC
+$redStaus: #FF0000
+$redButton: #EC3F3F
+$green:#4FF34F
+$white: #FFFFFF
+$gray:#E9E9E9
+$boderColor: #CCC
+$popupBg: #1D1D1D 30% opacity blur 10px
