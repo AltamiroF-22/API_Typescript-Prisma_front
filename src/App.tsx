@@ -38,6 +38,7 @@ export default function App() {
 
       if (response.status === 200) {
         alert("Form submitted succssfully!");
+        setCustomers((allcustomers) => [...allcustomers, response.data]);
       } else {
         alert("Form submission failed. Please try again.");
       }
@@ -45,8 +46,6 @@ export default function App() {
       alert("An error occurred during form submission. Please try again.");
       console.error("Error submitting form:", error);
     }
-
-    loadCustomers();
   };
   return (
     <div className="container">

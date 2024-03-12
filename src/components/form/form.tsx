@@ -14,11 +14,17 @@ const Form: React.FC<FormProps> = ({ method, onSubmit }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const nameValue = nameRef.current?.value ?? "";
+    const emailValue = emailRef.current?.value ?? "";
+
     const formData = {
-      name: nameRef.current?.value || "",
-      email: emailRef.current?.value || "",
+      name: nameValue,
+      email: emailValue,
     };
     onSubmit(formData);
+
+    nameRef.current!.value = "";
+    emailRef.current!.value = "";
   };
 
   return (
