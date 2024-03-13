@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./sass/app.sass";
 import Form from "./components/form/form";
 import Clients from "./components/clients/clients";
+import DeletePopup from "./components/deletePopup/deletePopup";
 import { api } from "./services/api";
 
 interface CustomerProps {
@@ -15,6 +16,8 @@ interface CustomerProps {
 
 export default function App() {
   const [customers, setCustomers] = useState<CustomerProps[]>([]);
+  const [deletePopup, setDeletePopup] = useState<boolean>(false);
+  const [idToDelete, setIdToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     loadCustomers();
@@ -47,27 +50,77 @@ export default function App() {
       console.error("Error submitting form:", error);
     }
   };
-  return (
-    <div className="container">
-      <main className="content">
-        <h1>Clients</h1>
-        <Form method="POST" onSubmit={handleFormSubmit} />
+  // edit
+  const handleOnEdit = (id: string) => {
+    alert(id);
+  };
 
-        <section className="clients">
-          {customers.length > 0 ? (
-            customers.map((customer) => (
-              <Clients
-                key={customer.id}
-                name={customer.name}
-                email={customer.email}
-                status={customer.status}
-              />
-            ))
-          ) : (
-            <p>Nenhum cliente disponível</p>
-          )}
-        </section>
-      </main>
-    </div>
+  //delete
+  const handleOnDelete = (id: string) => {
+    setIdToDelete(id);
+    setDeletePopup(true);
+  };
+
+  // Function to confirm delete operation
+  const handleOnDeleteConfirm = async () => {
+    if (idToDelete) {
+      try {
+        await api.delete("/customer", {
+          params: {
+            id: idToDelete,
+          },
+        });
+
+        const allcustomers = customers.filter(
+          (customer) => customer.id !== idToDelete
+        );
+
+        setCustomers(allcustomers);
+        
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setDeletePopup(false);
+  };
+
+  // Function to cancel delete operation
+  const handleOnDeleteCancel = () => {
+    setDeletePopup(false);
+    setIdToDelete(null);
+  };
+
+  return (
+    <>
+      {deletePopup && (
+        <DeletePopup
+          onDelete={handleOnDeleteConfirm}
+          onCancel={handleOnDeleteCancel}
+        />
+      )}
+      <div className="container">
+        <main className="content">
+          <h1>Clients</h1>
+          <Form method="POST" onSubmit={handleFormSubmit} />
+
+          <section className="clients">
+            {customers.length > 0 ? (
+              customers.map((customer) => (
+                <Clients
+                  key={customer.id}
+                  name={customer.name}
+                  email={customer.email}
+                  status={customer.status}
+                  onEdit={() => handleOnEdit(customer.id)}
+                  onDelete={() => handleOnDelete(customer.id)}
+                />
+              ))
+            ) : (
+              <p>Nenhum cliente disponível</p>
+            )}
+          </section>
+        </main>
+      </div>
+    </>
   );
 }

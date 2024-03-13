@@ -7,27 +7,39 @@ interface ClientsProps {
   name: string;
   email: string;
   status: boolean;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-const Clients: React.FC<ClientsProps> = ({ name, email, status }) => {
+const Clients: React.FC<ClientsProps> = ({
+  name,
+  email,
+  status,
+  onEdit,
+  onDelete,
+}) => {
+  const truncatedName = name.length > 26 ? name.substring(0, 26) + "..." : name;
+  const truncatedEmail =
+    email.length > 26 ? email.substring(0, 26) + "..." : email;
+
   return (
     <article className="client">
       <span className={`status  ${status === true ? "green" : "red"}`}></span>
       <div className="content">
         <div className="client-data">
           <p>
-            name: <span>{name}</span>
+            name: <span>{truncatedName}</span>
           </p>
           <p>
-            email: <span>{email}</span>
+            email: <span>{truncatedEmail}</span>
           </p>
         </div>
         <div className="actions">
           <button className="icon">
-            <img src={Pencil} alt="pencil icon" />
+            <img src={Pencil} alt="pencil icon" onClick={onEdit} />
           </button>
           <button className="icon">
-            <img src={TrashCan} alt="trash can icon" />
+            <img src={TrashCan} alt="trash can icon" onClick={onDelete} />
           </button>
         </div>
       </div>

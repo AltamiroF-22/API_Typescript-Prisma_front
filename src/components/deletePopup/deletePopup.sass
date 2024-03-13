@@ -1,0 +1,30 @@
+@use '../../sass/_variable'
+
+.background-blur
+    background-color: variable.$popupBg
+    width: 100vw
+    height: 100vh
+    z-index: 999
+    position: fixed
+    display: grid
+    place-content: center
+    overflow: hidden
+    backdrop-filter: blur(10px)
+
+    .delete-popup
+        background-color: variable.$white
+        padding: 30px 90px 40px 90px
+        display: flex
+        flex-direction: column
+        gap: 40px
+        border-radius: 20px
+        text-align: center
+        min-width: 300px
+
+        h2
+            font-weight: 100
+            
+
+        .buttons
+            display: flex
+            gap: 10px
