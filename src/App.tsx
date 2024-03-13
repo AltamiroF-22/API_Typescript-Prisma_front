@@ -3,6 +3,7 @@ import "./sass/app.sass";
 import Form from "./components/form/form";
 import Clients from "./components/clients/clients";
 import DeletePopup from "./components/deletePopup/deletePopup";
+import EditPopUp from "./components/editPopup/editPopup";
 import { api } from "./services/api";
 
 interface CustomerProps {
@@ -16,7 +17,9 @@ interface CustomerProps {
 
 export default function App() {
   const [customers, setCustomers] = useState<CustomerProps[]>([]);
+  const [editPopup, setEditPopup] = useState<boolean>(false);
   const [deletePopup, setDeletePopup] = useState<boolean>(false);
+  const [idToEdit, setIdToEdit] = useState<string | null>(null);
   const [idToDelete, setIdToDelete] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,9 +53,36 @@ export default function App() {
       console.error("Error submitting form:", error);
     }
   };
+
   // edit
   const handleOnEdit = (id: string) => {
-    alert(id);
+    setEditPopup(true);
+    setIdToEdit(id);
+  };
+
+  // Function to confirm edit operation
+  const handleUpdateCustomer = async (formData: {
+    name: string;
+    email: string;
+  }) => {
+    if (formData.name.trim().length < 1 || formData.email.trim().length < 1) {
+      return alert("The name field and email field can't be empty!");
+    }
+
+    if (idToEdit) {
+      try {
+        await api.patch("/customer", formData, {
+          params: {
+            id: idToEdit,
+          },
+        });
+
+        setEditPopup(false);
+        loadCustomers();
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   //delete
@@ -76,7 +106,6 @@ export default function App() {
         );
 
         setCustomers(allcustomers);
-        
       } catch (err) {
         console.log(err);
       }
@@ -92,6 +121,12 @@ export default function App() {
 
   return (
     <>
+      {editPopup && (
+        <EditPopUp
+          closeForm={() => setEditPopup(false)}
+          onSubmit={handleUpdateCustomer}
+        />
+      )}
       {deletePopup && (
         <DeletePopup
           onDelete={handleOnDeleteConfirm}
