@@ -21,9 +21,20 @@ export default function App() {
   const [deletePopup, setDeletePopup] = useState<boolean>(false);
   const [idToEdit, setIdToEdit] = useState<string | null>(null);
   const [idToDelete, setIdToDelete] = useState<string | null>(null);
+  const [h1Border, setH1Border] = useState<boolean>(false);
 
   useEffect(() => {
     loadCustomers();
+
+    const handleSetH1Border = () => {
+      const setScrollY = window.scrollY;
+      setScrollY > 30 ? setH1Border(true) : setH1Border(false);
+    };
+
+    window.addEventListener("scroll", handleSetH1Border);
+    return () => {
+      window.removeEventListener("scroll", handleSetH1Border);
+    };
   }, []);
 
   const loadCustomers = async () => {
@@ -135,7 +146,7 @@ export default function App() {
       )}
       <div className="container">
         <main className="content">
-          <h1>Clients</h1>
+          <h1 className={`${h1Border? 'h1-border' : ''}`}>Clients</h1>
           <Form method="POST" onSubmit={handleFormSubmit} />
 
           <section className="clients">
